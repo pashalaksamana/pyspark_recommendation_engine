@@ -12,7 +12,7 @@ The AWS's EMR cluster provided the packages for pyspark Environment.
 This project was using emr-5.29.0 version 
 Here's the EMR Cluster Setup
 
-![image_1](https://github.com/pashalaksamana/pyspark_recommendation_engine/img/aws-setup.png)
+![image_1](https://github.com/pashalaksamana/pyspark_recommendation_engine/blob/master/img/aws-setup.png)
 
 ### 2. Project Motivation
 
