@@ -13017,6 +13017,45 @@ ul.typeahead-list  > li > a.pull-right {
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
+<style type="text/css">
+    
+/* Temporary definitions which will become obsolete with Notebook release 5.0 */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+
+    </style>
 
 
 <style type="text/css">
@@ -13074,34 +13113,41 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Data-Exploration">Data Exploration<a class="anchor-link" href="#Data-Exploration">&#182;</a></h1>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="c1"># Starter code</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">f</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">types</span> <span class="k">as</span> <span class="n">t</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">StringType</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">isnan</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">when</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="n">udf</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">sort_array</span><span class="p">,</span> <span class="n">asc</span><span class="p">,</span> <span class="n">avg</span>
+<div class=" highlight hl-python2"><pre><span></span># Starter code
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+from pyspark.sql import functions as f
+from pyspark.sql import types as t
+from pyspark.sql.types import StringType
+from pyspark.sql.functions import isnan, count, when, col, desc, udf, col, sort_array, asc, avg
 
-<span class="c1"># Create spark session</span>
-<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
-    <span class="o">.</span><span class="n">builder</span> \
-    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Sparkify&quot;</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+# Create spark session
+spark = SparkSession \
+    .builder \
+    .appName(&quot;Sparkify&quot;) \
+    .getOrCreate()
 
-<span class="c1"># Read in full sparkify dataset</span>
-<span class="c1"># event_data = &quot;s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json&quot;</span>
-<span class="n">event_data</span> <span class="o">=</span> <span class="s2">&quot;s3n://udacity-dsnd/sparkify/sparkify_event_data.json&quot;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">event_data</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">ts</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">dataType</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">TimestampType</span><span class="p">())))</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">to_date</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">ts</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">dataType</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">TimestampType</span><span class="p">())))</span>
+# Read in full sparkify dataset
+# event_data = &quot;s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json&quot;
+event_data = &quot;s3n://udacity-dsnd/sparkify/sparkify_event_data.json&quot;
+df = spark.read.json(event_data)
+df = df.withColumn(&#39;timestamp&#39;, f.to_timestamp((df.ts/1000).cast(dataType=t.TimestampType())))
+df = df.withColumn(&#39;date&#39;, f.to_date((df.ts/1000).cast(dataType=t.TimestampType())))
 
-<span class="c1">#create event table</span>
-<span class="n">df</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;event_data&quot;</span><span class="p">)</span>
+#create event table
+df.createOrReplaceTempView(&quot;event_data&quot;)
 </pre></div>
 
     </div>
@@ -13122,10 +13168,10 @@ div#notebook {
 
  
  
-<div id="37e61eec-109e-48ae-8e21-37df1e90dcb0"></div>
+<div id="224d3944-426a-4990-8281-29318d1993ce"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#37e61eec-109e-48ae-8e21-37df1e90dcb0');
+var element = $('#224d3944-426a-4990-8281-29318d1993ce');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "0c62fa1fd5454bf5a444789fbb2ecc88", "version_major": 2, "version_minor": 0}
@@ -13168,10 +13214,10 @@ var element = $('#37e61eec-109e-48ae-8e21-37df1e90dcb0');
 
  
  
-<div id="0b8f0f8f-f578-4654-ba95-c74d1dcf08e5"></div>
+<div id="a925b292-f700-4ffb-a114-ca22ab35212e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#0b8f0f8f-f578-4654-ba95-c74d1dcf08e5');
+var element = $('#a925b292-f700-4ffb-a114-ca22ab35212e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13201,10 +13247,10 @@ var element = $('#0b8f0f8f-f578-4654-ba95-c74d1dcf08e5');
 
  
  
-<div id="2a79db14-c9e7-43b0-8da3-5cc340379b29"></div>
+<div id="664ead71-90fd-40df-9914-fccd01c866f7"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#2a79db14-c9e7-43b0-8da3-5cc340379b29');
+var element = $('#664ead71-90fd-40df-9914-fccd01c866f7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13222,8 +13268,8 @@ var element = $('#2a79db14-c9e7-43b0-8da3-5cc340379b29');
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">install_pypi_package</span><span class="p">(</span><span class="s2">&quot;pandas==0.25.1&quot;</span><span class="p">)</span> <span class="c1">#Install pandas version 0.25.1 </span>
-<span class="n">sc</span><span class="o">.</span><span class="n">install_pypi_package</span><span class="p">(</span><span class="s2">&quot;matplotlib&quot;</span><span class="p">,</span> <span class="s2">&quot;https://pypi.org/simple&quot;</span><span class="p">)</span> <span class="c1">#Install matplotlib from given PyPI repository</span>
+<div class=" highlight hl-python2"><pre><span></span>sc.install_pypi_package(&quot;pandas==0.25.1&quot;) #Install pandas version 0.25.1 
+sc.install_pypi_package(&quot;matplotlib&quot;, &quot;https://pypi.org/simple&quot;) #Install matplotlib from given PyPI repository
 </pre></div>
 
     </div>
@@ -13244,10 +13290,10 @@ var element = $('#2a79db14-c9e7-43b0-8da3-5cc340379b29');
 
  
  
-<div id="804ccc82-e849-4bf7-a228-65ed7c3f972e"></div>
+<div id="e662a7fb-2e0e-491b-b2b5-75be4c6972c3"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#804ccc82-e849-4bf7-a228-65ed7c3f972e');
+var element = $('#e662a7fb-2e0e-491b-b2b5-75be4c6972c3');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "04272f750a984cdbb8cd1625ce99682f", "version_major": 2, "version_minor": 0}
@@ -13266,10 +13312,10 @@ var element = $('#804ccc82-e849-4bf7-a228-65ed7c3f972e');
 
  
  
-<div id="73aca3ab-cd36-4eb7-901c-d767a540f1da"></div>
+<div id="8bc4485f-498b-4ea3-b663-6041646f4392"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#73aca3ab-cd36-4eb7-901c-d767a540f1da');
+var element = $('#8bc4485f-498b-4ea3-b663-6041646f4392');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13320,8 +13366,8 @@ Successfully installed cycler-0.10.0 kiwisolver-1.1.0 matplotlib-3.1.3 pyparsing
 <div class="prompt input_prompt">In&nbsp;[38]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<div class=" highlight hl-python2"><pre><span></span>import pandas as pd
+import matplotlib.pyplot as plt
 </pre></div>
 
     </div>
@@ -13342,10 +13388,10 @@ Successfully installed cycler-0.10.0 kiwisolver-1.1.0 matplotlib-3.1.3 pyparsing
 
  
  
-<div id="c2d31b0f-2d63-4330-857b-5a71e205de17"></div>
+<div id="1198a3bd-cb0a-4c07-b195-6c16b7c8633d"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c2d31b0f-2d63-4330-857b-5a71e205de17');
+var element = $('#1198a3bd-cb0a-4c07-b195-6c16b7c8633d');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "e6fe521ca614453a85432c8dc67855e9", "version_major": 2, "version_minor": 0}
@@ -13364,10 +13410,10 @@ var element = $('#c2d31b0f-2d63-4330-857b-5a71e205de17');
 
  
  
-<div id="f5565e87-1b1e-421a-b710-cec1e63e665b"></div>
+<div id="11e75c07-1950-4a53-b24f-db51e81a9787"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f5565e87-1b1e-421a-b710-cec1e63e665b');
+var element = $('#11e75c07-1950-4a53-b24f-db51e81a9787');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13385,7 +13431,7 @@ var element = $('#f5565e87-1b1e-421a-b710-cec1e63e665b');
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>df.printSchema()
 </pre></div>
 
     </div>
@@ -13406,10 +13452,10 @@ var element = $('#f5565e87-1b1e-421a-b710-cec1e63e665b');
 
  
  
-<div id="e0a21219-51df-42d7-908e-9c09505fb92e"></div>
+<div id="82fe80d8-c042-4354-b2cc-7bde11716be2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#e0a21219-51df-42d7-908e-9c09505fb92e');
+var element = $('#82fe80d8-c042-4354-b2cc-7bde11716be2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "6ce6d026d56747a8b453470b19f618b8", "version_major": 2, "version_minor": 0}
@@ -13428,10 +13474,10 @@ var element = $('#e0a21219-51df-42d7-908e-9c09505fb92e');
 
  
  
-<div id="01f0b157-0e9f-45ef-a4f5-df31eb3bc6ff"></div>
+<div id="f67affeb-95f3-4c60-8667-beef191d06b4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#01f0b157-0e9f-45ef-a4f5-df31eb3bc6ff');
+var element = $('#f67affeb-95f3-4c60-8667-beef191d06b4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13479,7 +13525,7 @@ var element = $('#01f0b157-0e9f-45ef-a4f5-df31eb3bc6ff');
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>df.head()
 </pre></div>
 
     </div>
@@ -13500,10 +13546,10 @@ var element = $('#01f0b157-0e9f-45ef-a4f5-df31eb3bc6ff');
 
  
  
-<div id="4f77926b-a370-44fd-906c-2ed4dc64c3f1"></div>
+<div id="5058a40f-06f4-4b2d-96cf-dafa221db45a"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#4f77926b-a370-44fd-906c-2ed4dc64c3f1');
+var element = $('#5058a40f-06f4-4b2d-96cf-dafa221db45a');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "25fcd5e5c61e42ecb6ea4c8612a072e8", "version_major": 2, "version_minor": 0}
@@ -13522,10 +13568,10 @@ var element = $('#4f77926b-a370-44fd-906c-2ed4dc64c3f1');
 
  
  
-<div id="89dae82e-a07b-4e92-b257-1fabe86ffcce"></div>
+<div id="f85179d1-7d00-4629-8b7e-5c7a17670a89"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#89dae82e-a07b-4e92-b257-1fabe86ffcce');
+var element = $('#f85179d1-7d00-4629-8b7e-5c7a17670a89');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13553,13 +13599,13 @@ var element = $('#89dae82e-a07b-4e92-b257-1fabe86ffcce');
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="c1"># Identify page</span>
-<span class="n">df_page_count</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            select distinct page, count(*) as n_event</span>
-<span class="s1">            from event_data</span>
-<span class="s1">            group by 1</span>
-<span class="s1">            order by 2</span>
-<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span># Identify page
+df_page_count = spark.sql(&#39;&#39;&#39;
+            select distinct page, count(*) as n_event
+            from event_data
+            group by 1
+            order by 2
+            &#39;&#39;&#39;).toPandas()
 </pre></div>
 
     </div>
@@ -13580,10 +13626,10 @@ var element = $('#89dae82e-a07b-4e92-b257-1fabe86ffcce');
 
  
  
-<div id="b975c0b9-dbf0-4d00-8d23-f12b2a008896"></div>
+<div id="4e2ad0d4-2361-41c8-bf23-393e6fa0e3ba"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b975c0b9-dbf0-4d00-8d23-f12b2a008896');
+var element = $('#4e2ad0d4-2361-41c8-bf23-393e6fa0e3ba');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "1a5c2e6ea3d340ccb5f25cefa38b65bc", "version_major": 2, "version_minor": 0}
@@ -13602,10 +13648,10 @@ var element = $('#b975c0b9-dbf0-4d00-8d23-f12b2a008896');
 
  
  
-<div id="bbf0fd72-33cb-472f-8740-0efbedfb2094"></div>
+<div id="7d96b86a-465c-495a-86cc-59d684233831"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#bbf0fd72-33cb-472f-8740-0efbedfb2094');
+var element = $('#7d96b86a-465c-495a-86cc-59d684233831');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13623,9 +13669,9 @@ var element = $('#bbf0fd72-33cb-472f-8740-0efbedfb2094');
 <div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">df_page_count</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;page&#39;</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;barh&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="o">%</span><span class="n">matplot</span> <span class="n">plt</span>
+<div class=" highlight hl-python2"><pre><span></span>df_page_count.plot(x=&#39;page&#39;,kind=&#39;barh&#39;)
+plt.tight_layout()
+%matplot plt
 </pre></div>
 
     </div>
@@ -13646,10 +13692,10 @@ var element = $('#bbf0fd72-33cb-472f-8740-0efbedfb2094');
 
  
  
-<div id="9c5e36e2-03f0-4a3a-a3d9-91840d50f33d"></div>
+<div id="35e45996-9636-4df5-9449-338cab355a63"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#9c5e36e2-03f0-4a3a-a3d9-91840d50f33d');
+var element = $('#35e45996-9636-4df5-9449-338cab355a63');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "d8d24510a4a340d2b009d41b2a923fb9", "version_major": 2, "version_minor": 0}
@@ -13668,10 +13714,10 @@ var element = $('#9c5e36e2-03f0-4a3a-a3d9-91840d50f33d');
 
  
  
-<div id="9bbcc2e7-eb52-4600-a912-9ec9d3a11c4a"></div>
+<div id="6ee48b68-d9d7-4c5a-84fc-a24e3f7fd1ff"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#9bbcc2e7-eb52-4600-a912-9ec9d3a11c4a');
+var element = $('#6ee48b68-d9d7-4c5a-84fc-a24e3f7fd1ff');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13704,9 +13750,9 @@ var element = $('#9bbcc2e7-eb52-4600-a912-9ec9d3a11c4a');
 <div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">df_page_count</span><span class="p">[</span><span class="n">df_page_count</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">((</span><span class="s1">&#39;Thumbs Up&#39;</span><span class="p">,</span><span class="s1">&#39;Thumbs Down&#39;</span><span class="p">))]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;page&#39;</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;barh&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="o">%</span><span class="n">matplot</span> <span class="n">plt</span>
+<div class=" highlight hl-python2"><pre><span></span>df_page_count[df_page_count[&#39;page&#39;].isin((&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;))].plot(x=&#39;page&#39;,kind=&#39;barh&#39;)
+plt.tight_layout()
+%matplot plt
 </pre></div>
 
     </div>
@@ -13727,10 +13773,10 @@ var element = $('#9bbcc2e7-eb52-4600-a912-9ec9d3a11c4a');
 
  
  
-<div id="1b045625-e8cf-494d-9030-f4a30e1ae1d1"></div>
+<div id="5783379c-5910-4542-89af-19b244d861a8"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#1b045625-e8cf-494d-9030-f4a30e1ae1d1');
+var element = $('#5783379c-5910-4542-89af-19b244d861a8');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "d66529c8f8434258af7bf65d3df4ffb2", "version_major": 2, "version_minor": 0}
@@ -13749,10 +13795,10 @@ var element = $('#1b045625-e8cf-494d-9030-f4a30e1ae1d1');
 
  
  
-<div id="6736d741-dd42-4b21-8fec-9af0ffb28139"></div>
+<div id="da47cab8-9af9-4e1c-a241-51f5e9bcd65d"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6736d741-dd42-4b21-8fec-9af0ffb28139');
+var element = $('#da47cab8-9af9-4e1c-a241-51f5e9bcd65d');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13785,11 +13831,11 @@ var element = $('#6736d741-dd42-4b21-8fec-9af0ffb28139');
 <div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            select userId,artist,song,page,ts</span>
-<span class="s1">            from event_data</span>
-<span class="s1">            where page in (&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;)</span>
-<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>spark.sql(&#39;&#39;&#39;
+            select userId,artist,song,page,ts
+            from event_data
+            where page in (&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;)
+            &#39;&#39;&#39;).show()
 </pre></div>
 
     </div>
@@ -13810,10 +13856,10 @@ var element = $('#6736d741-dd42-4b21-8fec-9af0ffb28139');
 
  
  
-<div id="6b978bcc-4c63-46a2-be15-336f8567e5dc"></div>
+<div id="e06b5568-2152-47f4-a14d-49b7f18b83e3"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6b978bcc-4c63-46a2-be15-336f8567e5dc');
+var element = $('#e06b5568-2152-47f4-a14d-49b7f18b83e3');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "1f3789c0ae5d45399bd16408dce08f43", "version_major": 2, "version_minor": 0}
@@ -13832,10 +13878,10 @@ var element = $('#6b978bcc-4c63-46a2-be15-336f8567e5dc');
 
  
  
-<div id="ccf496d2-485e-4100-a3c3-26c0eee20c19"></div>
+<div id="5e1192d3-4d05-4584-a5dd-bb27eeae3bec"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ccf496d2-485e-4100-a3c3-26c0eee20c19');
+var element = $('#5e1192d3-4d05-4584-a5dd-bb27eeae3bec');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13882,18 +13928,27 @@ only showing top 20 rows</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Data-Preprocessing">Data Preprocessing<a class="anchor-link" href="#Data-Preprocessing">&#182;</a></h3><p>If we see from above, Thumbs Up data do not contain song value. Therefore we need some data preprocessing to capture the song value.</p>
+<p>Next I found that the song value is exist in NextSong event before the Thumbs Up event.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            select userId,artist,song,page,ts</span>
-<span class="s1">            from event_data</span>
-<span class="s1">            where page in (&#39;Thumbs Up&#39;,&#39;NextSong&#39;,&#39;Thumbs Down&#39;)</span>
-<span class="s1">            and userId= &#39;1526624&#39;</span>
-<span class="s1">            order by ts</span>
-<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>spark.sql(&#39;&#39;&#39;
+            select userId,artist,song,page,ts
+            from event_data
+            where page in (&#39;Thumbs Up&#39;,&#39;NextSong&#39;,&#39;Thumbs Down&#39;)
+            and userId= &#39;1526624&#39;
+            order by ts
+            &#39;&#39;&#39;).show()
 </pre></div>
 
     </div>
@@ -13914,10 +13969,10 @@ only showing top 20 rows</pre>
 
  
  
-<div id="79c3b67f-181e-4dc7-8f14-83ceb3a94957"></div>
+<div id="9593621a-de05-43f3-8a27-46df45113b82"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#79c3b67f-181e-4dc7-8f14-83ceb3a94957');
+var element = $('#9593621a-de05-43f3-8a27-46df45113b82');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "7c285cfc414c469cbe9078988fa7ea93", "version_major": 2, "version_minor": 0}
@@ -13936,10 +13991,10 @@ var element = $('#79c3b67f-181e-4dc7-8f14-83ceb3a94957');
 
  
  
-<div id="98d1f003-0a88-4c75-8046-00cf14a469c2"></div>
+<div id="75236674-03c9-4d00-9a12-b760011f9ae1"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#98d1f003-0a88-4c75-8046-00cf14a469c2');
+var element = $('#75236674-03c9-4d00-9a12-b760011f9ae1');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13986,39 +14041,47 @@ only showing top 20 rows</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h6 id="Utilising-Lag-Function">Utilising Lag Function<a class="anchor-link" href="#Utilising-Lag-Function">&#182;</a></h6><p>Following query is utilising the lag function in the sql to capture the song value in the event before Thumbs Up or Thumbs Down. From here I created new dataframe to keep only song, userid, and its value (1 for Thumbs Up, 0 for Thumbs Down)</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[30]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">df_rating</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            with get_song_data as (</span>
-<span class="s1">            select timestamp,artist, song, userId,page,</span>
-<span class="s1">                lag( song,1) over (partition by userId order by timestamp) as lag_song,</span>
-<span class="s1">                lag( artist,1) over (partition by userId order by timestamp) as lag_artist</span>
-<span class="s1">            from event_data</span>
-<span class="s1">            where page in (&#39;NextSong&#39;,&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;,&#39;Add to Playlist&#39;)</span>
-<span class="s1">            order by timestamp</span>
-<span class="s1">            )</span>
-<span class="s1">            select </span>
-<span class="s1">                    userId,</span>
-<span class="s1">                    concat(lag_artist,&#39;-&#39;,lag_song) as song,</span>
-<span class="s1">        </span>
-<span class="s1">                    min(</span>
-<span class="s1">                    case when page = &#39;Thumbs Up&#39; then 1.000 </span>
-<span class="s1">                         when page = &#39;Thumbs Down&#39; then 0</span>
-<span class="s1">                    end )</span>
-<span class="s1">                    as value</span>
-<span class="s1">            from get_song_data</span>
-<span class="s1">            where page in (&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;)</span>
-<span class="s1">                  and lag_song is not NULL</span>
-<span class="s1">                  and lag_artist is not NULL</span>
-<span class="s1">            group by 1,2</span>
-<span class="s1">            order by 1,2</span>
-<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+<div class=" highlight hl-python2"><pre><span></span>df_rating = spark.sql(&#39;&#39;&#39;
+            with get_song_data as (
+            select timestamp,artist, song, userId,page,
+                lag( song,1) over (partition by userId order by timestamp) as lag_song,
+                lag( artist,1) over (partition by userId order by timestamp) as lag_artist
+            from event_data
+            where page in (&#39;NextSong&#39;,&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;,&#39;Add to Playlist&#39;)
+            order by timestamp
+            )
+            select 
+                    userId,
+                    concat(lag_artist,&#39;-&#39;,lag_song) as song,
+        
+                    min(
+                    case when page = &#39;Thumbs Up&#39; then 1.000 
+                         when page = &#39;Thumbs Down&#39; then 0
+                    end )
+                    as value
+            from get_song_data
+            where page in (&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;)
+                  and lag_song is not NULL
+                  and lag_artist is not NULL
+            group by 1,2
+            order by 1,2
+            &#39;&#39;&#39;)
 
-<span class="n">df_rating</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">df_rating</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">)</span>
+df_rating.show()
+df_rating.createOrReplaceTempView(&quot;dataset&quot;)
 </pre></div>
 
     </div>
@@ -14039,10 +14102,10 @@ only showing top 20 rows</pre>
 
  
  
-<div id="067ebf9b-c7a6-4053-a9cd-6435050214e3"></div>
+<div id="2ae08621-07c0-4601-a7a1-5bd8fb0be9d6"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#067ebf9b-c7a6-4053-a9cd-6435050214e3');
+var element = $('#2ae08621-07c0-4601-a7a1-5bd8fb0be9d6');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "70fd94dce34c48d38da4a350842933d3", "version_major": 2, "version_minor": 0}
@@ -14061,10 +14124,10 @@ var element = $('#067ebf9b-c7a6-4053-a9cd-6435050214e3');
 
  
  
-<div id="f8dbeb52-ced4-4d45-9cee-81f5c80fc96b"></div>
+<div id="7b1679ca-0798-481e-ba46-22c1a4a74aeb"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f8dbeb52-ced4-4d45-9cee-81f5c80fc96b');
+var element = $('#7b1679ca-0798-481e-ba46-22c1a4a74aeb');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14111,15 +14174,22 @@ only showing top 20 rows</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Statistics-of-User-Ratings">Statistics of User Ratings<a class="anchor-link" href="#Statistics-of-User-Ratings">&#182;</a></h4>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    select count(distinct userId),count(distinct song)</span>
-<span class="s1">    from dataset</span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>spark.sql(&#39;&#39;&#39;
+    select count(distinct userId),count(distinct song)
+    from dataset
+&#39;&#39;&#39;).show()
 </pre></div>
 
     </div>
@@ -14140,10 +14210,10 @@ only showing top 20 rows</pre>
 
  
  
-<div id="938b0958-d3c5-406f-915e-e166dca9f214"></div>
+<div id="a03136ac-21d6-4331-81ef-21f65089fc60"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#938b0958-d3c5-406f-915e-e166dca9f214');
+var element = $('#a03136ac-21d6-4331-81ef-21f65089fc60');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "f14f3354ff804c5e90a48b412dd86a52", "version_major": 2, "version_minor": 0}
@@ -14162,10 +14232,10 @@ var element = $('#938b0958-d3c5-406f-915e-e166dca9f214');
 
  
  
-<div id="4f76b806-ba9a-44e0-a644-6b5e1ca3fdda"></div>
+<div id="26510127-7a49-4474-ae8a-730968271810"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#4f76b806-ba9a-44e0-a644-6b5e1ca3fdda');
+var element = $('#26510127-7a49-4474-ae8a-730968271810');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14197,21 +14267,21 @@ var element = $('#4f76b806-ba9a-44e0-a644-6b5e1ca3fdda');
 <div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    with count_rated_song as (</span>
-<span class="s1">    select userId,count(song) as rated_song</span>
-<span class="s1">    from dataset</span>
-<span class="s1">    group by 1)</span>
-<span class="s1">    select </span>
-<span class="s1">    avg(rated_song) as average_song_rated,</span>
-<span class="s1">    min(rated_song)               as minimum_song_rated,</span>
-<span class="s1">    approx_percentile(rated_song, 0.25, 100) as percentile_25,</span>
-<span class="s1">    approx_percentile(rated_song, 0.50, 100) as percentile_50,</span>
-<span class="s1">    approx_percentile(rated_song, 0.75, 100) as percentile_75,</span>
-<span class="s1">    max(rated_song) as maximum_song_rated</span>
-<span class="s1">    from count_rated_song</span>
-<span class="s1">    </span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>spark.sql(&#39;&#39;&#39;
+    with count_rated_song as (
+    select userId,count(song) as rated_song
+    from dataset
+    group by 1)
+    select 
+    avg(rated_song) as average_song_rated,
+    min(rated_song)               as minimum_song_rated,
+    approx_percentile(rated_song, 0.25, 100) as percentile_25,
+    approx_percentile(rated_song, 0.50, 100) as percentile_50,
+    approx_percentile(rated_song, 0.75, 100) as percentile_75,
+    max(rated_song) as maximum_song_rated
+    from count_rated_song
+    
+&#39;&#39;&#39;).show()
 </pre></div>
 
     </div>
@@ -14232,10 +14302,10 @@ var element = $('#4f76b806-ba9a-44e0-a644-6b5e1ca3fdda');
 
  
  
-<div id="aeac96ed-1cf8-4e21-a9e3-9235a5263dc6"></div>
+<div id="4f1249dd-99af-48e9-ae05-972e0b0201db"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#aeac96ed-1cf8-4e21-a9e3-9235a5263dc6');
+var element = $('#4f1249dd-99af-48e9-ae05-972e0b0201db');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "cbe196b98b2d46948dce433ab0aeb83e", "version_major": 2, "version_minor": 0}
@@ -14254,10 +14324,10 @@ var element = $('#aeac96ed-1cf8-4e21-a9e3-9235a5263dc6');
 
  
  
-<div id="bf94fc99-1216-409e-8ab6-1c241a8d241c"></div>
+<div id="1960e5e9-9832-4230-8f60-507fa445519f"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#bf94fc99-1216-409e-8ab6-1c241a8d241c');
+var element = $('#1960e5e9-9832-4230-8f60-507fa445519f');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14289,21 +14359,21 @@ var element = $('#bf94fc99-1216-409e-8ab6-1c241a8d241c');
 <div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    with count_rated_song as (</span>
-<span class="s1">    select song,count(userId) as user_rating</span>
-<span class="s1">    from dataset</span>
-<span class="s1">    group by 1)</span>
-<span class="s1">    select </span>
-<span class="s1">    avg(user_rating) as average_n_user_rating,</span>
-<span class="s1">    min(user_rating)               as minimum_n_user_rating,</span>
-<span class="s1">    approx_percentile(user_rating, 0.25, 100) as percentile_25,</span>
-<span class="s1">    approx_percentile(user_rating, 0.50, 100) as percentile_50,</span>
-<span class="s1">    approx_percentile(user_rating, 0.75, 100) as percentile_75,</span>
-<span class="s1">    max(user_rating) as maximum_n_user_rating</span>
-<span class="s1">    from count_rated_song</span>
-<span class="s1">    </span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>spark.sql(&#39;&#39;&#39;
+    with count_rated_song as (
+    select song,count(userId) as user_rating
+    from dataset
+    group by 1)
+    select 
+    avg(user_rating) as average_n_user_rating,
+    min(user_rating)               as minimum_n_user_rating,
+    approx_percentile(user_rating, 0.25, 100) as percentile_25,
+    approx_percentile(user_rating, 0.50, 100) as percentile_50,
+    approx_percentile(user_rating, 0.75, 100) as percentile_75,
+    max(user_rating) as maximum_n_user_rating
+    from count_rated_song
+    
+&#39;&#39;&#39;).show()
 </pre></div>
 
     </div>
@@ -14324,10 +14394,10 @@ var element = $('#bf94fc99-1216-409e-8ab6-1c241a8d241c');
 
  
  
-<div id="c589b8b7-f1da-4ef7-b9b5-190bf7615be4"></div>
+<div id="d69a5f94-9a26-4b54-8c22-18d5761b0bf2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c589b8b7-f1da-4ef7-b9b5-190bf7615be4');
+var element = $('#d69a5f94-9a26-4b54-8c22-18d5761b0bf2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "be2f85f808a94e3f8f0e9d26d308219e", "version_major": 2, "version_minor": 0}
@@ -14346,10 +14416,10 @@ var element = $('#c589b8b7-f1da-4ef7-b9b5-190bf7615be4');
 
  
  
-<div id="563dc899-6949-47bd-b2e0-69842dfdb087"></div>
+<div id="f335446e-161e-47f4-b192-74951b3522ff"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#563dc899-6949-47bd-b2e0-69842dfdb087');
+var element = $('#f335446e-161e-47f4-b192-74951b3522ff');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14381,7 +14451,7 @@ var element = $('#563dc899-6949-47bd-b2e0-69842dfdb087');
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span>
+<div class=" highlight hl-python2"><pre><span></span> 
 </pre></div>
 
     </div>

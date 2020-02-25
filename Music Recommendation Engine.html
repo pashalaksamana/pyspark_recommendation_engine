@@ -13017,6 +13017,45 @@ ul.typeahead-list  > li > a.pull-right {
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
+<style type="text/css">
+    
+/* Temporary definitions which will become obsolete with Notebook release 5.0 */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+
+    </style>
 
 
 <style type="text/css">
@@ -13074,34 +13113,41 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Music-Recommendation-Engine">Music Recommendation Engine<a class="anchor-link" href="#Music-Recommendation-Engine">&#182;</a></h1>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="c1"># Starter code</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">col</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">f</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">types</span> <span class="k">as</span> <span class="n">t</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">StringType</span>
-<span class="kn">from</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">import</span> <span class="n">isnan</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">when</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">desc</span><span class="p">,</span> <span class="n">udf</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">sort_array</span><span class="p">,</span> <span class="n">asc</span><span class="p">,</span> <span class="n">avg</span>
+<div class=" highlight hl-python2"><pre><span></span># Starter code
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+from pyspark.sql import functions as f
+from pyspark.sql import types as t
+from pyspark.sql.types import StringType
+from pyspark.sql.functions import isnan, count, when, col, desc, udf, col, sort_array, asc, avg
 
-<span class="c1"># Create spark session</span>
-<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span> \
-    <span class="o">.</span><span class="n">builder</span> \
-    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Sparkify&quot;</span><span class="p">)</span> \
-    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+# Create spark session
+spark = SparkSession \
+    .builder \
+    .appName(&quot;Sparkify&quot;) \
+    .getOrCreate()
 
-<span class="c1"># Read in full sparkify dataset</span>
-<span class="c1"># event_data = &quot;s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json&quot;</span>
-<span class="n">event_data</span> <span class="o">=</span> <span class="s2">&quot;s3n://udacity-dsnd/sparkify/sparkify_event_data.json&quot;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">event_data</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">ts</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">dataType</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">TimestampType</span><span class="p">())))</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">to_date</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">ts</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">dataType</span><span class="o">=</span><span class="n">t</span><span class="o">.</span><span class="n">TimestampType</span><span class="p">())))</span>
+# Read in full sparkify dataset
+# event_data = &quot;s3n://udacity-dsnd/sparkify/mini_sparkify_event_data.json&quot;
+event_data = &quot;s3n://udacity-dsnd/sparkify/sparkify_event_data.json&quot;
+df = spark.read.json(event_data)
+df = df.withColumn(&#39;timestamp&#39;, f.to_timestamp((df.ts/1000).cast(dataType=t.TimestampType())))
+df = df.withColumn(&#39;date&#39;, f.to_date((df.ts/1000).cast(dataType=t.TimestampType())))
 
-<span class="c1">#create event table</span>
-<span class="n">df</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;event_data&quot;</span><span class="p">)</span>
+#create event table
+df.createOrReplaceTempView(&quot;event_data&quot;)
 </pre></div>
 
     </div>
@@ -13122,10 +13168,10 @@ div#notebook {
 
  
  
-<div id="680da795-acbe-4998-a6ba-4b0a6382ddcd"></div>
+<div id="09c7b4b4-8e56-4c6a-83a1-9c57ec437977"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#680da795-acbe-4998-a6ba-4b0a6382ddcd');
+var element = $('#09c7b4b4-8e56-4c6a-83a1-9c57ec437977');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "cd48522fd1ba4a8b858dd3f3b0a293dd", "version_major": 2, "version_minor": 0}
@@ -13168,10 +13214,10 @@ var element = $('#680da795-acbe-4998-a6ba-4b0a6382ddcd');
 
  
  
-<div id="f309a9b0-6ce7-42a2-be7a-79412680cf5c"></div>
+<div id="c6e912f9-3516-4a8f-83a3-f3eb546f635a"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f309a9b0-6ce7-42a2-be7a-79412680cf5c');
+var element = $('#c6e912f9-3516-4a8f-83a3-f3eb546f635a');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13201,10 +13247,10 @@ var element = $('#f309a9b0-6ce7-42a2-be7a-79412680cf5c');
 
  
  
-<div id="10abb756-bf5b-4370-91cf-55c242e4647a"></div>
+<div id="2e3a5c69-791e-4167-9c54-75b16558dc26"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#10abb756-bf5b-4370-91cf-55c242e4647a');
+var element = $('#2e3a5c69-791e-4167-9c54-75b16558dc26');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13217,41 +13263,55 @@ var element = $('#10abb756-bf5b-4370-91cf-55c242e4647a');
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Data-Preprocessing">Data Preprocessing<a class="anchor-link" href="#Data-Preprocessing">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="1.-Capture-Song---User-Value">1. Capture Song - User Value<a class="anchor-link" href="#1.-Capture-Song---User-Value">&#182;</a></h5>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="c1"># we will value 1 and 0 for the thumbs up or thumbs down music respectively.</span>
+<div class=" highlight hl-python2"><pre><span></span># we will value 1 and 0 for the thumbs up or thumbs down music respectively.
 
-<span class="n">df_rating</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            with get_song_data as (</span>
-<span class="s1">            select timestamp,artist, song, userId,page,</span>
-<span class="s1">                lag( song,1) over (partition by userId order by timestamp) as lag_song,</span>
-<span class="s1">                lag( artist,1) over (partition by userId order by timestamp) as lag_artist</span>
-<span class="s1">            from event_data</span>
-<span class="s1">            where page in (&#39;NextSong&#39;,&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;,&#39;Add to Playlist&#39;)</span>
-<span class="s1">            order by timestamp</span>
-<span class="s1">            )</span>
-<span class="s1">            select </span>
-<span class="s1">                    userId,</span>
-<span class="s1">                    concat(lag_artist,&#39;-&#39;,lag_song) as song,</span>
-<span class="s1">        </span>
-<span class="s1">                    min(</span>
-<span class="s1">                    case when page = &#39;Thumbs Up&#39; then 1.000 </span>
-<span class="s1">                         when page = &#39;Thumbs Down&#39; then 0</span>
-<span class="s1">                    end )</span>
-<span class="s1">                    as value</span>
-<span class="s1">            from get_song_data</span>
-<span class="s1">            where page in (&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;)</span>
-<span class="s1">                  and lag_song is not NULL</span>
-<span class="s1">                  and lag_artist is not NULL</span>
-<span class="s1">            group by 1,2</span>
-<span class="s1">            order by 1,2</span>
-<span class="s1">            &#39;&#39;&#39;</span><span class="p">)</span>
+df_rating = spark.sql(&#39;&#39;&#39;
+            with get_song_data as (
+            select timestamp,artist, song, userId,page,
+                lag( song,1) over (partition by userId order by timestamp) as lag_song,
+                lag( artist,1) over (partition by userId order by timestamp) as lag_artist
+            from event_data
+            where page in (&#39;NextSong&#39;,&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;,&#39;Add to Playlist&#39;)
+            order by timestamp
+            )
+            select 
+                    userId,
+                    concat(lag_artist,&#39;-&#39;,lag_song) as song,
+        
+                    min(
+                    case when page = &#39;Thumbs Up&#39; then 1.000 
+                         when page = &#39;Thumbs Down&#39; then 0
+                    end )
+                    as value
+            from get_song_data
+            where page in (&#39;Thumbs Up&#39;,&#39;Thumbs Down&#39;)
+                  and lag_song is not NULL
+                  and lag_artist is not NULL
+            group by 1,2
+            order by 1,2
+            &#39;&#39;&#39;)
 
-<span class="n">df_rating</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-<span class="n">df_rating</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;dataset&quot;</span><span class="p">)</span>
+df_rating.show()
+df_rating.createOrReplaceTempView(&quot;dataset&quot;)
 </pre></div>
 
     </div>
@@ -13272,10 +13332,10 @@ var element = $('#10abb756-bf5b-4370-91cf-55c242e4647a');
 
  
  
-<div id="c889d8b2-964a-449b-b1ae-f955a7b0e4ae"></div>
+<div id="ff3698ff-2ee4-411a-ab09-7a2e193cc327"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c889d8b2-964a-449b-b1ae-f955a7b0e4ae');
+var element = $('#ff3698ff-2ee4-411a-ab09-7a2e193cc327');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "bea239ecc5014d0997ea293d248cc3f9", "version_major": 2, "version_minor": 0}
@@ -13294,10 +13354,10 @@ var element = $('#c889d8b2-964a-449b-b1ae-f955a7b0e4ae');
 
  
  
-<div id="aa43bd8e-031c-4f0a-9682-3c198f0323ca"></div>
+<div id="9e7daaeb-275d-4147-a11b-8585df552729"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#aa43bd8e-031c-4f0a-9682-3c198f0323ca');
+var element = $('#9e7daaeb-275d-4147-a11b-8585df552729');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13344,16 +13404,23 @@ only showing top 20 rows</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="2.-Create-Index-for-song">2. Create Index for song<a class="anchor-link" href="#2.-Create-Index-for-song">&#182;</a></h5>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.ml.feature</span> <span class="kn">import</span> <span class="n">RegexTokenizer</span><span class="p">,</span> <span class="n">CountVectorizer</span><span class="p">,</span> \
-    <span class="n">IDF</span><span class="p">,</span> <span class="n">StringIndexer</span>
+<div class=" highlight hl-python2"><pre><span></span>from pyspark.ml.feature import RegexTokenizer, CountVectorizer, \
+    IDF, StringIndexer
 
-<span class="n">indexer</span> <span class="o">=</span> <span class="n">StringIndexer</span><span class="p">(</span><span class="n">inputCol</span><span class="o">=</span><span class="s2">&quot;song&quot;</span><span class="p">,</span> <span class="n">outputCol</span><span class="o">=</span><span class="s2">&quot;songId&quot;</span><span class="p">)</span>
-<span class="n">df_rating</span> <span class="o">=</span> <span class="n">indexer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_rating</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">df_rating</span><span class="p">)</span>
+indexer = StringIndexer(inputCol=&quot;song&quot;, outputCol=&quot;songId&quot;)
+df_rating = indexer.fit(df_rating).transform(df_rating)
 </pre></div>
 
     </div>
@@ -13374,10 +13441,10 @@ only showing top 20 rows</pre>
 
  
  
-<div id="e4d31f5d-11c2-429e-aa46-235388db1ddf"></div>
+<div id="d6fc2b73-b832-47f8-8d0c-5fa013c603a9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#e4d31f5d-11c2-429e-aa46-235388db1ddf');
+var element = $('#d6fc2b73-b832-47f8-8d0c-5fa013c603a9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "9c02813aa1d04a978ebad6979859a287", "version_major": 2, "version_minor": 0}
@@ -13396,10 +13463,10 @@ var element = $('#e4d31f5d-11c2-429e-aa46-235388db1ddf');
 
  
  
-<div id="155996c3-2a4e-4a2b-a650-9f9489b66a8a"></div>
+<div id="0d291e0f-cfe6-4089-b56a-0002a8610e67"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#155996c3-2a4e-4a2b-a650-9f9489b66a8a');
+var element = $('#0d291e0f-cfe6-4089-b56a-0002a8610e67');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13412,13 +13479,20 @@ var element = $('#155996c3-2a4e-4a2b-a650-9f9489b66a8a');
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="3.-Cast-userId-as-Integer">3. Cast userId as Integer<a class="anchor-link" href="#3.-Cast-userId-as-Integer">&#182;</a></h5>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql.types</span> <span class="kn">import</span> <span class="n">DoubleType</span><span class="p">,</span><span class="n">IntegerType</span>
-<span class="n">df_rating</span> <span class="o">=</span> <span class="n">df_rating</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;userId&quot;</span><span class="p">,</span> <span class="n">df_rating</span><span class="p">[</span><span class="s2">&quot;userId&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span>
+<div class=" highlight hl-python2"><pre><span></span>from pyspark.sql.types import DoubleType,IntegerType
+df_rating = df_rating.withColumn(&quot;userId&quot;, df_rating[&quot;userId&quot;].cast(IntegerType()))
 </pre></div>
 
     </div>
@@ -13439,10 +13513,10 @@ var element = $('#155996c3-2a4e-4a2b-a650-9f9489b66a8a');
 
  
  
-<div id="b80f454f-b5c2-4b4b-96c7-0e53a6479256"></div>
+<div id="fdff703f-825a-4d2d-84b2-b8e3f885bc7b"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b80f454f-b5c2-4b4b-96c7-0e53a6479256');
+var element = $('#fdff703f-825a-4d2d-84b2-b8e3f885bc7b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "4bf09e30ffe74e7fa9749afe6fb9f7df", "version_major": 2, "version_minor": 0}
@@ -13461,183 +13535,10 @@ var element = $('#b80f454f-b5c2-4b4b-96c7-0e53a6479256');
 
  
  
-<div id="127d179d-189c-4c33-86e8-65bb96a88d53"></div>
+<div id="a32bbe01-d7e6-4246-a3e2-8cb91e082dbc"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#127d179d-189c-4c33-86e8-65bb96a88d53');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.ml.recommendation</span> <span class="kn">import</span> <span class="n">ALS</span>
-<span class="kn">from</span> <span class="nn">pyspark.ml.evaluation</span> <span class="kn">import</span> <span class="n">RegressionEvaluator</span>
-<span class="kn">import</span> <span class="nn">pyspark.sql.functions</span> <span class="kn">as</span> <span class="nn">func</span>
-
-<span class="k">def</span> <span class="nf">tune_ALS</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">validation_data</span><span class="p">,</span> <span class="n">maxIter</span><span class="p">,</span> <span class="n">regParams</span><span class="p">,</span> <span class="n">ranks</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    grid search function to select the best model based on RMSE of</span>
-<span class="sd">    validation data</span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    train_data: spark DF with columns [&#39;userId&#39;, &#39;movieId&#39;, &#39;rating&#39;]</span>
-<span class="sd">    </span>
-<span class="sd">    validation_data: spark DF with columns [&#39;userId&#39;, &#39;movieId&#39;, &#39;rating&#39;]</span>
-<span class="sd">    </span>
-<span class="sd">    maxIter: int, max number of learning iterations</span>
-<span class="sd">    </span>
-<span class="sd">    regParams: list of float, one dimension of hyper-param tuning grid</span>
-<span class="sd">    </span>
-<span class="sd">    ranks: list of float, one dimension of hyper-param tuning grid</span>
-<span class="sd">    </span>
-<span class="sd">    Return</span>
-<span class="sd">    ------</span>
-<span class="sd">    The best fitted ALS model with highest accuracy score on validation data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># initial</span>
-    <span class="n">max_accuracy</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">best_rank</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="n">best_regularization</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">best_model</span> <span class="o">=</span> <span class="bp">None</span>
-    
-
-    
-    <span class="n">udf_convert_bol</span> <span class="o">=</span> <span class="n">udf</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span><span class="o">&gt;</span><span class="mf">0.5</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">())</span>
-    
-    <span class="k">for</span> <span class="n">rank</span> <span class="ow">in</span> <span class="n">ranks</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">regParams</span><span class="p">:</span>
-            <span class="c1"># get ALS model</span>
-            <span class="n">als</span> <span class="o">=</span> <span class="n">ALS</span><span class="p">(</span><span class="n">userCol</span><span class="o">=</span><span class="s2">&quot;userId&quot;</span><span class="p">,</span> <span class="n">itemCol</span><span class="o">=</span><span class="s2">&quot;songId&quot;</span><span class="p">,</span> <span class="n">ratingCol</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setMaxIter</span><span class="p">(</span><span class="n">maxIter</span><span class="p">)</span><span class="o">.</span><span class="n">setRank</span><span class="p">(</span><span class="n">rank</span><span class="p">)</span><span class="o">.</span><span class="n">setRegParam</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
-            <span class="c1"># train ALS model</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">als</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
-            <span class="c1"># evaluate the model by computing the RMSE on the validation data</span>
-            
-            <span class="n">predictions_train</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
-            <span class="n">predictions_validation</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">validation_data</span><span class="p">)</span>
-                      
-            <span class="c1">#get boolean</span>
-            <span class="n">predictions_train</span> <span class="o">=</span> <span class="n">predictions_train</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;prediction_bol&#39;</span><span class="p">,</span><span class="n">udf_convert_bol</span><span class="p">(</span><span class="n">predictions_train</span><span class="o">.</span><span class="n">prediction</span><span class="p">))</span>
-            <span class="n">predictions_validation</span> <span class="o">=</span> <span class="n">predictions_validation</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;prediction_bol&#39;</span><span class="p">,</span><span class="n">udf_convert_bol</span><span class="p">(</span><span class="n">predictions_validation</span><span class="o">.</span><span class="n">prediction</span><span class="p">))</span>
-            
-            <span class="c1">#get correct variable</span>
-            <span class="n">predictions_train</span> <span class="o">=</span> <span class="n">predictions_train</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;correct&#39;</span><span class="p">,</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;prediction_bol&#39;</span><span class="p">)</span><span class="o">==</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
-            <span class="n">predictions_validation</span> <span class="o">=</span> <span class="n">predictions_validation</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s1">&#39;correct&#39;</span><span class="p">,</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;prediction_bol&#39;</span><span class="p">)</span><span class="o">==</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">))</span>
-            
-            <span class="n">accuracy_train</span> <span class="o">=</span> <span class="n">predictions_train</span> \
-                            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;average&#39;</span><span class="p">)</span> <span class="p">)</span> \
-                            <span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()[</span><span class="s1">&#39;average&#39;</span><span class="p">]</span>
-            
-            <span class="n">accuracy_validation</span> <span class="o">=</span> <span class="n">predictions_validation</span> \
-                            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;average&#39;</span><span class="p">))</span> \
-                            <span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()[</span><span class="s1">&#39;average&#39;</span><span class="p">]</span>
-            
-            <span class="n">precission_train</span> <span class="o">=</span> <span class="n">predictions_train</span> \
-                            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;prediction_bol&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> \
-                            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;average&#39;</span><span class="p">))</span> \
-                            <span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()[</span><span class="s1">&#39;average&#39;</span><span class="p">]</span>
-            
-            <span class="n">precission_validation</span> <span class="o">=</span> <span class="n">predictions_validation</span> \
-                            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;prediction_bol&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> \
-                            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;average&#39;</span><span class="p">))</span> \
-                            <span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()[</span><span class="s1">&#39;average&#39;</span><span class="p">]</span>
-            
-            <span class="n">recall_train</span> <span class="o">=</span> <span class="n">predictions_train</span> \
-                            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> \
-                            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;average&#39;</span><span class="p">))</span> \
-                            <span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()[</span><span class="s1">&#39;average&#39;</span><span class="p">]</span>
-            
-            <span class="n">recall_validation</span> <span class="o">=</span> <span class="n">predictions_validation</span> \
-                            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> \
-                            <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">avg</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">IntegerType</span><span class="p">()))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;average&#39;</span><span class="p">))</span> \
-                            <span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()[</span><span class="s1">&#39;average&#39;</span><span class="p">]</span>
-            
-            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;{} latent factors and regularization = {}: </span><span class="se">\n</span><span class="s1">&#39;</span>
-
-                  <span class="s1">&#39;train accuracy is {}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                  <span class="s1">&#39;train recall is {}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                  <span class="s1">&#39;train precission is {}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                   
-
-                  <span class="s1">&#39;validation accuracy is {}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                  <span class="s1">&#39;validation recall is {}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                  <span class="s1">&#39;validation precission is {}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rank</span> \
-                                                          <span class="p">,</span> <span class="n">reg</span>\
-                                                          
-                                                          <span class="p">,</span> <span class="n">accuracy_train</span>\
-                                                          <span class="p">,</span> <span class="n">recall_train</span>\
-                                                          <span class="p">,</span> <span class="n">precission_train</span>\
-                                                          
-                                                          <span class="p">,</span> <span class="n">accuracy_validation</span>\
-                                                          <span class="p">,</span> <span class="n">recall_validation</span>\
-                                                          <span class="p">,</span> <span class="n">precission_validation</span><span class="p">))</span>
-                                                  
-            <span class="k">if</span> <span class="n">accuracy_validation</span> <span class="o">&gt;</span> <span class="n">max_accuracy</span><span class="p">:</span>
-                <span class="n">max_accuracy</span> <span class="o">=</span> <span class="n">accuracy_validation</span>
-                <span class="n">best_rank</span> <span class="o">=</span> <span class="n">rank</span>
-                <span class="n">best_regularization</span> <span class="o">=</span> <span class="n">reg</span>
-                <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>
-                
-    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The best model has {} latent factors and &#39;</span>
-          <span class="s1">&#39;regularization = {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_rank</span><span class="p">,</span> <span class="n">best_regularization</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">predictions_validation</span><span class="p">,</span> <span class="n">best_model</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="f67bb18a-cf37-4665-9c87-6ded7cd07191"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#f67bb18a-cf37-4665-9c87-6ded7cd07191');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "508898f8daec4d009fc6c06a4f162f42", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="bccbe98d-e410-4b4a-b72f-aa14e4dbfe5b"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#bccbe98d-e410-4b4a-b72f-aa14e4dbfe5b');
+var element = $('#a32bbe01-d7e6-4246-a3e2-8cb91e082dbc');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13655,7 +13556,7 @@ var element = $('#bccbe98d-e410-4b4a-b72f-aa14e4dbfe5b');
 <div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">df_rating</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>df_rating.printSchema()
 </pre></div>
 
     </div>
@@ -13676,10 +13577,10 @@ var element = $('#bccbe98d-e410-4b4a-b72f-aa14e4dbfe5b');
 
  
  
-<div id="f25b7cc3-a3d2-444d-9e08-321710de0fdb"></div>
+<div id="dcefb587-d9f0-40b2-a61f-53239b7dd72e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f25b7cc3-a3d2-444d-9e08-321710de0fdb');
+var element = $('#dcefb587-d9f0-40b2-a61f-53239b7dd72e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "4e075c7c0ed2492789d02c550250d2b4", "version_major": 2, "version_minor": 0}
@@ -13698,10 +13599,10 @@ var element = $('#f25b7cc3-a3d2-444d-9e08-321710de0fdb');
 
  
  
-<div id="158c3e55-9367-4f8b-8fe2-ef5db4d3a1c1"></div>
+<div id="00ce76f0-52dc-4b46-b16a-d6d75cb762e1"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#158c3e55-9367-4f8b-8fe2-ef5db4d3a1c1');
+var element = $('#00ce76f0-52dc-4b46-b16a-d6d75cb762e1');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13728,24 +13629,128 @@ var element = $('#158c3e55-9367-4f8b-8fe2-ef5db4d3a1c1');
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Build-Training,-Tuning,-and-Evaluating-Function">Build Training, Tuning, and Evaluating Function<a class="anchor-link" href="#Build-Training,-Tuning,-and-Evaluating-Function">&#182;</a></h2>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="c1">#create split train and test, and filter test only for value available in train</span>
-<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">df_rating</span><span class="o">.</span><span class="n">randomSplit</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.3</span><span class="p">],</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<div class=" highlight hl-python2"><pre><span></span>from pyspark.ml.recommendation import ALS
+from pyspark.ml.evaluation import RegressionEvaluator
+import pyspark.sql.functions as func
 
-<span class="n">train</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
-<span class="n">test</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
+def tune_ALS(train_data, validation_data, maxIter, regParams, ranks):
+    &quot;&quot;&quot;
+    grid search function to select the best model based on RMSE of
+    validation data
+    Parameters
+    ----------
+    train_data: spark DF with columns [&#39;userId&#39;, &#39;movieId&#39;, &#39;rating&#39;]
+    
+    validation_data: spark DF with columns [&#39;userId&#39;, &#39;movieId&#39;, &#39;rating&#39;]
+    
+    maxIter: int, max number of learning iterations
+    
+    regParams: list of float, one dimension of hyper-param tuning grid
+    
+    ranks: list of float, one dimension of hyper-param tuning grid
+    
+    Return
+    ------
+    The best fitted ALS model with highest accuracy score on validation data
+    &quot;&quot;&quot;
+    # initial
+    max_accuracy = 0
+    best_rank = -1
+    best_regularization = 0
+    best_model = None
+    
 
-<span class="n">clean_test</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    select *</span>
-<span class="s1">    from test a </span>
-<span class="s1">    where a.userId in (select b.userId from train b)</span>
-<span class="s1">          and a.songId in (select c.songId from train c)</span>
+    
+    udf_convert_bol = udf(lambda x: 1 if x&gt;0.5 else 0, IntegerType())
+    
+    for rank in ranks:
+        for reg in regParams:
+            # get ALS model
+            als = ALS(userCol=&quot;userId&quot;, itemCol=&quot;songId&quot;, ratingCol=&quot;value&quot;).setMaxIter(maxIter).setRank(rank).setRegParam(reg)
+            # train ALS model
+            model = als.fit(train_data)
+            # evaluate the model by computing the RMSE on the validation data
+            
+            predictions_train = model.transform(train_data)
+            predictions_validation = model.transform(validation_data)
+                      
+            #get boolean
+            predictions_train = predictions_train.withColumn(&#39;prediction_bol&#39;,udf_convert_bol(predictions_train.prediction))
+            predictions_validation = predictions_validation.withColumn(&#39;prediction_bol&#39;,udf_convert_bol(predictions_validation.prediction))
+            
+            #get correct variable
+            predictions_train = predictions_train.withColumn(&#39;correct&#39;,col(&#39;prediction_bol&#39;)==col(&#39;value&#39;))
+            predictions_validation = predictions_validation.withColumn(&#39;correct&#39;,col(&#39;prediction_bol&#39;)==col(&#39;value&#39;))
+            
+            accuracy_train = predictions_train \
+                            .agg(avg(col(&quot;correct&quot;).cast(IntegerType())).alias(&#39;average&#39;) ) \
+                            .collect()[0].asDict()[&#39;average&#39;]
+            
+            accuracy_validation = predictions_validation \
+                            .agg(avg(col(&quot;correct&quot;).cast(IntegerType())).alias(&#39;average&#39;)) \
+                            .collect()[0].asDict()[&#39;average&#39;]
+            
+            precission_train = predictions_train \
+                            .filter(col(&#39;prediction_bol&#39;)==1) \
+                            .agg(avg(col(&quot;correct&quot;).cast(IntegerType())).alias(&#39;average&#39;)) \
+                            .collect()[0].asDict()[&#39;average&#39;]
+            
+            precission_validation = predictions_validation \
+                            .filter(col(&#39;prediction_bol&#39;)==1) \
+                            .agg(avg(col(&quot;correct&quot;).cast(IntegerType())).alias(&#39;average&#39;)) \
+                            .collect()[0].asDict()[&#39;average&#39;]
+            
+            recall_train = predictions_train \
+                            .filter(col(&#39;value&#39;)==1) \
+                            .agg(avg(col(&quot;correct&quot;).cast(IntegerType())).alias(&#39;average&#39;)) \
+                            .collect()[0].asDict()[&#39;average&#39;]
+            
+            recall_validation = predictions_validation \
+                            .filter(col(&#39;value&#39;)==1) \
+                            .agg(avg(col(&quot;correct&quot;).cast(IntegerType())).alias(&#39;average&#39;)) \
+                            .collect()[0].asDict()[&#39;average&#39;]
+            
+            print(&#39;{} latent factors and regularization = {}: \n&#39;
 
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+                  &#39;train accuracy is {}\n&#39;
+                  &#39;train recall is {}\n&#39;
+                  &#39;train precission is {}\n&#39;
+                   
+
+                  &#39;validation accuracy is {}\n&#39;
+                  &#39;validation recall is {}\n&#39;
+                  &#39;validation precission is {}\n&#39;.format(rank \
+                                                          , reg\
+                                                          
+                                                          , accuracy_train\
+                                                          , recall_train\
+                                                          , precission_train\
+                                                          
+                                                          , accuracy_validation\
+                                                          , recall_validation\
+                                                          , precission_validation))
+                                                  
+            if accuracy_validation &gt; max_accuracy:
+                max_accuracy = accuracy_validation
+                best_rank = rank
+                best_regularization = reg
+                best_model = model
+                
+    print(&#39;\nThe best model has {} latent factors and &#39;
+          &#39;regularization = {}&#39;.format(best_rank, best_regularization))
+    return predictions_validation, best_model
 </pre></div>
 
     </div>
@@ -13766,10 +13771,100 @@ var element = $('#158c3e55-9367-4f8b-8fe2-ef5db4d3a1c1');
 
  
  
-<div id="36eb8170-c371-4df0-8f9c-f82f9d521658"></div>
+<div id="aa7b827a-606d-402f-b160-62810f71b1e9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#36eb8170-c371-4df0-8f9c-f82f9d521658');
+var element = $('#aa7b827a-606d-402f-b160-62810f71b1e9');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "508898f8daec4d009fc6c06a4f162f42", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="8ba82e96-5798-41f8-899a-a8cb369654b9"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#8ba82e96-5798-41f8-899a-a8cb369654b9');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Model-Training">Model Training<a class="anchor-link" href="#Model-Training">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Split-the-Dataset-and-Filter-the-Test-Data-only-for-Song-and-User-available-in-Train">Split the Dataset and Filter the Test Data only for Song and User available in Train<a class="anchor-link" href="#Split-the-Dataset-and-Filter-the-Test-Data-only-for-Song-and-User-available-in-Train">&#182;</a></h5>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-python2"><pre><span></span>#create split train and test, and filter test only for value available in train
+train, test = df_rating.randomSplit([0.7,0.3],seed=42)
+
+train.createOrReplaceTempView(&quot;train&quot;)
+test.createOrReplaceTempView(&quot;test&quot;)
+
+clean_test = spark.sql(&#39;&#39;&#39;
+    select *
+    from test a 
+    where a.userId in (select b.userId from train b)
+          and a.songId in (select c.songId from train c)
+
+&#39;&#39;&#39;)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="a2ec88dc-978b-48ad-bf93-4a8180f76fc0"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#a2ec88dc-978b-48ad-bf93-4a8180f76fc0');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "b09afa9c44874e62b9e8f1ea176ea124", "version_major": 2, "version_minor": 0}
@@ -13788,10 +13883,10 @@ var element = $('#36eb8170-c371-4df0-8f9c-f82f9d521658');
 
  
  
-<div id="dc40feff-3698-4228-b24a-302df19e4a28"></div>
+<div id="12d262bc-a073-41ca-9d05-c2c36e67804d"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#dc40feff-3698-4228-b24a-302df19e4a28');
+var element = $('#12d262bc-a073-41ca-9d05-c2c36e67804d');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13807,7 +13902,13 @@ var element = $('#dc40feff-3698-4228-b24a-302df19e4a28');
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="try-first-model-with-following-hyperparameter">try first model with following hyperparameter<a class="anchor-link" href="#try-first-model-with-following-hyperparameter">&#182;</a></h3>
+<h5 id="Try-first-model-with-following-hyperparameter">Try first model with following hyperparameter<a class="anchor-link" href="#Try-first-model-with-following-hyperparameter">&#182;</a></h5><p>We will rebuild the first model with following hyperparameter:</p>
+<ul>
+<li>maxIter = 10</li>
+<li>regParams = 0.05</li>
+<li>ranks = 20</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -13816,7 +13917,7 @@ var element = $('#dc40feff-3698-4228-b24a-302df19e4a28');
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">prediction</span><span class="p">,</span><span class="n">model</span> <span class="o">=</span> <span class="n">tune_ALS</span><span class="p">(</span><span class="n">train</span><span class="p">,</span><span class="n">clean_test</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">],[</span><span class="mi">20</span><span class="p">])</span>
+<div class=" highlight hl-python2"><pre><span></span>prediction,model = tune_ALS(train,clean_test, 10, [0.05],[20])
 </pre></div>
 
     </div>
@@ -13837,10 +13938,10 @@ var element = $('#dc40feff-3698-4228-b24a-302df19e4a28');
 
  
  
-<div id="60d03ea4-efdd-427e-9a0b-151593ae7ba2"></div>
+<div id="774d097c-bea1-4c7f-8709-a9139753791a"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#60d03ea4-efdd-427e-9a0b-151593ae7ba2');
+var element = $('#774d097c-bea1-4c7f-8709-a9139753791a');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "d77be9f1827d49e994da928a7daaca91", "version_major": 2, "version_minor": 0}
@@ -13859,10 +13960,10 @@ var element = $('#60d03ea4-efdd-427e-9a0b-151593ae7ba2');
 
  
  
-<div id="7c35508c-a93d-451f-bcae-4f8090d35ed3"></div>
+<div id="2c1c65d0-e93a-43e5-8681-a64790f88ab8"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#7c35508c-a93d-451f-bcae-4f8090d35ed3');
+var element = $('#2c1c65d0-e93a-43e5-8681-a64790f88ab8');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13899,7 +14000,7 @@ The best model has 20 latent factors and regularization = 0.05</pre>
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">prediction</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>prediction.count()
 </pre></div>
 
     </div>
@@ -13920,10 +14021,10 @@ The best model has 20 latent factors and regularization = 0.05</pre>
 
  
  
-<div id="74b53eb1-7e28-462e-85d4-2445c522ff87"></div>
+<div id="c635c924-4691-4d4c-8e5a-76f7440789fb"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#74b53eb1-7e28-462e-85d4-2445c522ff87');
+var element = $('#c635c924-4691-4d4c-8e5a-76f7440789fb');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "d76b33e16df54607a3cc04e2c2c0e270", "version_major": 2, "version_minor": 0}
@@ -13942,10 +14043,10 @@ var element = $('#74b53eb1-7e28-462e-85d4-2445c522ff87');
 
  
  
-<div id="f68f5552-1bf6-4eae-9f57-adc891ef5f0a"></div>
+<div id="9f37b76f-53ed-43df-a14f-970df8d7fc6d"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f68f5552-1bf6-4eae-9f57-adc891ef5f0a');
+var element = $('#9f37b76f-53ed-43df-a14f-970df8d7fc6d');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -13968,15 +14069,22 @@ var element = $('#f68f5552-1bf6-4eae-9f57-adc891ef5f0a');
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Let's-Take-a-look-on-Confusion-Matrix">Let's Take a look on Confusion Matrix<a class="anchor-link" href="#Let's-Take-a-look-on-Confusion-Matrix">&#182;</a></h5>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">TP</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">TN</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">FP</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">FN</span> <span class="o">=</span> <span class="n">prediction</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>TP = prediction.filter(col(&quot;correct&quot;)==1).filter(col(&#39;value&#39;)==1).count()
+TN = prediction.filter(col(&quot;correct&quot;)==1).filter(col(&#39;value&#39;)==0).count()
+FP = prediction.filter(col(&quot;correct&quot;)==0).filter(col(&#39;value&#39;)==0).count()
+FN = prediction.filter(col(&quot;correct&quot;)==0).filter(col(&#39;value&#39;)==1).count()
 </pre></div>
 
     </div>
@@ -13997,10 +14105,10 @@ var element = $('#f68f5552-1bf6-4eae-9f57-adc891ef5f0a');
 
  
  
-<div id="debd10dc-129f-4dc5-add9-62eb4d5fa7c5"></div>
+<div id="93e8ac22-285b-49c7-b2f7-b325c04810de"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#debd10dc-129f-4dc5-add9-62eb4d5fa7c5');
+var element = $('#93e8ac22-285b-49c7-b2f7-b325c04810de');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "8dc9f74de494448791e80c1986346578", "version_major": 2, "version_minor": 0}
@@ -14019,10 +14127,10 @@ var element = $('#debd10dc-129f-4dc5-add9-62eb4d5fa7c5');
 
  
  
-<div id="d8d60bc8-55fe-4617-9ad3-10206db289d1"></div>
+<div id="b491a893-bf82-40c5-ab75-6dae672e11b1"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#d8d60bc8-55fe-4617-9ad3-10206db289d1');
+var element = $('#b491a893-bf82-40c5-ab75-6dae672e11b1');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14040,10 +14148,10 @@ var element = $('#d8d60bc8-55fe-4617-9ad3-10206db289d1');
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">TP</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">TN</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">FP</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">FN</span><span class="p">)</span>
+<div class=" highlight hl-python2"><pre><span></span>print(TP)
+print(TN)
+print(FP)
+print(FN)
 </pre></div>
 
     </div>
@@ -14064,10 +14172,10 @@ var element = $('#d8d60bc8-55fe-4617-9ad3-10206db289d1');
 
  
  
-<div id="c3b3f0a6-0802-476d-9e62-264a3e10d91b"></div>
+<div id="e566df37-56d6-429b-acad-796b8f5ba382"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c3b3f0a6-0802-476d-9e62-264a3e10d91b');
+var element = $('#e566df37-56d6-429b-acad-796b8f5ba382');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "9ded4ed7a43445fa89d6f52f9971ca72", "version_major": 2, "version_minor": 0}
@@ -14086,10 +14194,10 @@ var element = $('#c3b3f0a6-0802-476d-9e62-264a3e10d91b');
 
  
  
-<div id="34ccc0d9-9911-4bd7-a6a2-8f63feb8efae"></div>
+<div id="29721a2e-fe33-45f5-8529-8f0e36dd66a6"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#34ccc0d9-9911-4bd7-a6a2-8f63feb8efae');
+var element = $('#29721a2e-fe33-45f5-8529-8f0e36dd66a6');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14118,7 +14226,13 @@ var element = $('#34ccc0d9-9911-4bd7-a6a2-8f63feb8efae');
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="try-second-model-with-different-hyperparameter">try second model with different hyperparameter<a class="anchor-link" href="#try-second-model-with-different-hyperparameter">&#182;</a></h3>
+<h6 id="try-second-model-with-different-hyperparameter">try second model with different hyperparameter<a class="anchor-link" href="#try-second-model-with-different-hyperparameter">&#182;</a></h6><p>We will rebuild the first model with following hyperparameter:</p>
+<ul>
+<li>maxIter = 10</li>
+<li>regParams = 0.05</li>
+<li>ranks = 30</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -14127,8 +14241,8 @@ var element = $('#34ccc0d9-9911-4bd7-a6a2-8f63feb8efae');
 <div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="c1"># Refining Model by finding best hyperparameter</span>
-<span class="n">prediction_2</span><span class="p">,</span><span class="n">model_2</span> <span class="o">=</span> <span class="n">tune_ALS</span><span class="p">(</span><span class="n">train</span><span class="p">,</span><span class="n">clean_test</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">],[</span><span class="mi">30</span><span class="p">])</span>
+<div class=" highlight hl-python2"><pre><span></span># Refining Model by finding best hyperparameter
+prediction_2,model_2 = tune_ALS(train,clean_test, 10, [0.05],[30])
 </pre></div>
 
     </div>
@@ -14149,10 +14263,10 @@ var element = $('#34ccc0d9-9911-4bd7-a6a2-8f63feb8efae');
 
  
  
-<div id="ebaa365c-f7ab-4683-ba6b-4b4cc8acac9d"></div>
+<div id="b9da16a3-b140-45b0-ba0b-ca72f78cfbf7"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#ebaa365c-f7ab-4683-ba6b-4b4cc8acac9d');
+var element = $('#b9da16a3-b140-45b0-ba0b-ca72f78cfbf7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "19794281ccfb4bf7a95345867ce22c7e", "version_major": 2, "version_minor": 0}
@@ -14171,10 +14285,10 @@ var element = $('#ebaa365c-f7ab-4683-ba6b-4b4cc8acac9d');
 
  
  
-<div id="acef77cf-367b-4ddd-a557-58595b2d3b5f"></div>
+<div id="c82f0de8-1c35-4a24-b15b-d4e84c309d66"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#acef77cf-367b-4ddd-a557-58595b2d3b5f');
+var element = $('#c82f0de8-1c35-4a24-b15b-d4e84c309d66');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14206,15 +14320,22 @@ The best model has 30 latent factors and regularization = 0.05</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Let's-Take-a-look-on-Confusion-Matrix">Let's Take a look on Confusion Matrix<a class="anchor-link" href="#Let's-Take-a-look-on-Confusion-Matrix">&#182;</a></h5>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">TP_2</span> <span class="o">=</span> <span class="n">prediction_2</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">TN_2</span> <span class="o">=</span> <span class="n">prediction_2</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">FP_2</span> <span class="o">=</span> <span class="n">prediction_2</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-<span class="n">FN_2</span> <span class="o">=</span> <span class="n">prediction_2</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>TP_2 = prediction_2.filter(col(&quot;correct&quot;)==1).filter(col(&#39;value&#39;)==1).count()
+TN_2 = prediction_2.filter(col(&quot;correct&quot;)==1).filter(col(&#39;value&#39;)==0).count()
+FP_2 = prediction_2.filter(col(&quot;correct&quot;)==0).filter(col(&#39;value&#39;)==0).count()
+FN_2 = prediction_2.filter(col(&quot;correct&quot;)==0).filter(col(&#39;value&#39;)==1).count()
 </pre></div>
 
     </div>
@@ -14235,10 +14356,10 @@ The best model has 30 latent factors and regularization = 0.05</pre>
 
  
  
-<div id="6034a5ba-81ad-428e-8234-211faa25e3a4"></div>
+<div id="d25f8ca6-ea63-4c4c-bfa3-a9cf33429300"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#6034a5ba-81ad-428e-8234-211faa25e3a4');
+var element = $('#d25f8ca6-ea63-4c4c-bfa3-a9cf33429300');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "be3570f35d3f40f2b9134a4318ee124e", "version_major": 2, "version_minor": 0}
@@ -14257,10 +14378,10 @@ var element = $('#6034a5ba-81ad-428e-8234-211faa25e3a4');
 
  
  
-<div id="c7e9bbe3-2182-42b8-8a4f-78e1ce9ad85d"></div>
+<div id="277eebb8-2aa6-43cc-a90f-bea3f60a55d4"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c7e9bbe3-2182-42b8-8a4f-78e1ce9ad85d');
+var element = $('#277eebb8-2aa6-43cc-a90f-bea3f60a55d4');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14278,10 +14399,10 @@ var element = $('#c7e9bbe3-2182-42b8-8a4f-78e1ce9ad85d');
 <div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">TP_2</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">TN_2</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">FP_2</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">FN_2</span><span class="p">)</span>
+<div class=" highlight hl-python2"><pre><span></span>print(TP_2)
+print(TN_2)
+print(FP_2)
+print(FN_2)
 </pre></div>
 
     </div>
@@ -14302,10 +14423,10 @@ var element = $('#c7e9bbe3-2182-42b8-8a4f-78e1ce9ad85d');
 
  
  
-<div id="496e4009-817a-4a12-bfe6-c8fcf3ee866a"></div>
+<div id="0bf9c857-0d12-4086-9fd2-b2b4a53fae11"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#496e4009-817a-4a12-bfe6-c8fcf3ee866a');
+var element = $('#0bf9c857-0d12-4086-9fd2-b2b4a53fae11');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "20664041a50c4741bd3f938923a21903", "version_major": 2, "version_minor": 0}
@@ -14324,10 +14445,10 @@ var element = $('#496e4009-817a-4a12-bfe6-c8fcf3ee866a');
 
  
  
-<div id="2b070982-20eb-4d82-bf82-1692591b59de"></div>
+<div id="0bcc1367-29fc-4786-bce0-3460f0ebea71"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#2b070982-20eb-4d82-bf82-1692591b59de');
+var element = $('#0bcc1367-29fc-4786-bce0-3460f0ebea71');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14356,7 +14477,20 @@ var element = $('#2b070982-20eb-4d82-bf82-1692591b59de');
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Let's-give-a-recommendation-for-user-1000025">Let's give a recommendation for user 1000025<a class="anchor-link" href="#Let's-give-a-recommendation-for-user-1000025">&#182;</a></h3>
+<h2 id="Let's-give-a-recommendation-for-user-1000025">Let's give a recommendation for user 1000025<a class="anchor-link" href="#Let's-give-a-recommendation-for-user-1000025">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Model-Rebuild">Model Rebuild<a class="anchor-link" href="#Model-Rebuild">&#182;</a></h5><p>We will rebuild the first model with following hyperparameter:</p>
+<ul>
+<li>maxIter = 10</li>
+<li>regParams = 0.05</li>
+<li>ranks = 20</li>
+</ul>
+
 </div>
 </div>
 </div>
@@ -14365,8 +14499,8 @@ var element = $('#2b070982-20eb-4d82-bf82-1692591b59de');
 <div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="c1">#Rebuild the model</span>
-<span class="n">prediction</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="n">tune_ALS</span><span class="p">(</span><span class="n">train</span><span class="p">,</span><span class="n">clean_test</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">],[</span><span class="mi">20</span><span class="p">])</span>
+<div class=" highlight hl-python2"><pre><span></span>#Rebuild the model
+prediction, model = tune_ALS(train,clean_test, 10, [0.05],[20])
 </pre></div>
 
     </div>
@@ -14387,10 +14521,10 @@ var element = $('#2b070982-20eb-4d82-bf82-1692591b59de');
 
  
  
-<div id="f1fd2c18-b51b-4500-bcc8-827ce02a540b"></div>
+<div id="63370290-3f2e-49ca-bd8d-374a9880b5e9"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f1fd2c18-b51b-4500-bcc8-827ce02a540b');
+var element = $('#63370290-3f2e-49ca-bd8d-374a9880b5e9');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "ad3d956c7cdf4636b2d9aa11b48759ca", "version_major": 2, "version_minor": 0}
@@ -14409,10 +14543,10 @@ var element = $('#f1fd2c18-b51b-4500-bcc8-827ce02a540b');
 
  
  
-<div id="76fda253-6149-4f3b-88e2-456b7f7d3cdc"></div>
+<div id="ccc56428-a05a-4ee7-8d58-7eb4c357332c"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#76fda253-6149-4f3b-88e2-456b7f7d3cdc');
+var element = $('#ccc56428-a05a-4ee7-8d58-7eb4c357332c');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14449,7 +14583,7 @@ The best model has 20 latent factors and regularization = 0.05</pre>
 <div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">train</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<div class=" highlight hl-python2"><pre><span></span>train.show()
 </pre></div>
 
     </div>
@@ -14470,10 +14604,10 @@ The best model has 20 latent factors and regularization = 0.05</pre>
 
  
  
-<div id="9a2f179c-b418-40ea-92a5-bb5f67bb4044"></div>
+<div id="dda23330-f33f-4681-9de6-eaa86b8dfa0e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#9a2f179c-b418-40ea-92a5-bb5f67bb4044');
+var element = $('#dda23330-f33f-4681-9de6-eaa86b8dfa0e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "b782bedb5c664c62ae9eb60cd76a54c1", "version_major": 2, "version_minor": 0}
@@ -14492,10 +14626,10 @@ var element = $('#9a2f179c-b418-40ea-92a5-bb5f67bb4044');
 
  
  
-<div id="f987cec3-7f6e-4bb3-b056-5fe8dff25d2d"></div>
+<div id="30d0339b-1237-4ce3-a0c0-7ba6d9490e4b"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f987cec3-7f6e-4bb3-b056-5fe8dff25d2d');
+var element = $('#30d0339b-1237-4ce3-a0c0-7ba6d9490e4b');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14542,16 +14676,23 @@ only showing top 20 rows</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Create-Dataframe-that-contains-all-songs-with-target-userId-for-predicting-the-value">Create Dataframe that contains all songs with target userId for predicting the value<a class="anchor-link" href="#Create-Dataframe-that-contains-all-songs-with-target-userId-for-predicting-the-value">&#182;</a></h5>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[34]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">to_predict</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    select songId, song,1000025 as userId</span>
-<span class="s1">    from train</span>
-<span class="s1">    group by 1,2</span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+<div class=" highlight hl-python2"><pre><span></span>to_predict = spark.sql(&#39;&#39;&#39;
+    select songId, song,1000025 as userId
+    from train
+    group by 1,2
+&#39;&#39;&#39;)
 </pre></div>
 
     </div>
@@ -14572,10 +14713,10 @@ only showing top 20 rows</pre>
 
  
  
-<div id="f156492c-06d0-42a3-939f-945f15d2975c"></div>
+<div id="cc89e982-3673-4626-85bf-178eaadedb04"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#f156492c-06d0-42a3-939f-945f15d2975c');
+var element = $('#cc89e982-3673-4626-85bf-178eaadedb04');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "043a9f3fc81e489589365a7769d4e668", "version_major": 2, "version_minor": 0}
@@ -14594,10 +14735,10 @@ var element = $('#f156492c-06d0-42a3-939f-945f15d2975c');
 
  
  
-<div id="30566602-60c3-4861-80e3-0b236e04dea6"></div>
+<div id="51a0f0ce-17d5-4d85-9835-7f2c82e1e06e"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#30566602-60c3-4861-80e3-0b236e04dea6');
+var element = $('#51a0f0ce-17d5-4d85-9835-7f2c82e1e06e');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14610,24 +14751,31 @@ var element = $('#30566602-60c3-4861-80e3-0b236e04dea6');
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h6 id="Predict-The-song-Value-and-Filter-the-rated-song-in-Train-data-and-sort-by-Prediction-value">Predict The song Value and Filter the rated song in Train data and sort by Prediction value<a class="anchor-link" href="#Predict-The-song-Value-and-Filter-the-rated-song-in-Train-data-and-sort-by-Prediction-value">&#182;</a></h6>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[44]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span><span class="n">song_predict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">to_predict</span><span class="p">)</span>
-<span class="n">song_predict</span><span class="o">.</span><span class="n">createOrReplaceTempView</span><span class="p">(</span><span class="s2">&quot;rec&quot;</span><span class="p">)</span>
+<div class=" highlight hl-python2"><pre><span></span>song_predict = model.transform(to_predict)
+song_predict.createOrReplaceTempView(&quot;rec&quot;)
 
-<span class="n">spark</span><span class="o">.</span><span class="n">sql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">    select a.*</span>
-<span class="s1">    from rec a </span>
-<span class="s1">    left join train b on a.songId=b.songId and a.userId = b.userId</span>
-<span class="s1">    where b.userId is null</span>
-<span class="s1">    and prediction &lt;10 --to prevent unlimited value</span>
-<span class="s1">    order by prediction desc</span>
-<span class="s1">    limit 10</span>
+spark.sql(&#39;&#39;&#39;
+    select a.*
+    from rec a 
+    left join train b on a.songId=b.songId and a.userId = b.userId
+    where b.userId is null
+    and prediction &lt;10 --to prevent unlimited value
+    order by prediction desc
+    limit 10
 
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+&#39;&#39;&#39;).show()
 </pre></div>
 
     </div>
@@ -14648,10 +14796,10 @@ var element = $('#30566602-60c3-4861-80e3-0b236e04dea6');
 
  
  
-<div id="4548c0b5-990f-454e-a1c0-113f429c4a65"></div>
+<div id="eea9bde1-1ea0-4bf9-88b2-b83a209b597f"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#4548c0b5-990f-454e-a1c0-113f429c4a65');
+var element = $('#eea9bde1-1ea0-4bf9-88b2-b83a209b597f');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "5eee8ed3ece14e96886beef8fb5c692b", "version_major": 2, "version_minor": 0}
@@ -14670,10 +14818,10 @@ var element = $('#4548c0b5-990f-454e-a1c0-113f429c4a65');
 
  
  
-<div id="4fb49df2-dcd3-4aca-a54f-85accbae075a"></div>
+<div id="1622680e-fd14-4d5e-bf51-f3569e8c8ad2"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#4fb49df2-dcd3-4aca-a54f-85accbae075a');
+var element = $('#1622680e-fd14-4d5e-bf51-f3569e8c8ad2');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
 {"model_id": "", "version_major": 2, "version_minor": 0}
@@ -14714,7 +14862,7 @@ var element = $('#4fb49df2-dcd3-4aca-a54f-85accbae075a');
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-python2"><pre><span></span>
+<div class=" highlight hl-python2"><pre><span></span> 
 </pre></div>
 
     </div>
